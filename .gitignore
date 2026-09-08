@@ -1,0 +1,6 @@
+node_modules/
+.promptfoo/cache/
+.env
+*.log
+tmp/
+scratch/

@@ -1,0 +1,11 @@
+description: "Khảo Sát Thực Lực Thật 100% Của Antigravity Subagents (NO CHEATING)"
+
+prompts:
+  - "{{prompt}}"
+
+providers:
+  - id: file://eval_providers.js
+    label: "Antigravity Real Native Subagents"
+
+tests:
+  - tests/real_benchmark_suite.yaml

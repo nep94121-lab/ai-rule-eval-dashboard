@@ -1,0 +1,14 @@
+{
+  "name": "rule-eval-system",
+  "version": "1.0.0",
+  "description": "Rule Evaluation System using Promptfoo",
+  "private": true,
+  "scripts": {
+    "eval": "promptfoo eval",
+    "view": "promptfoo view",
+    "test": "promptfoo eval"
+  },
+  "dependencies": {
+    "promptfoo": "^0.112.8"
+  }
+}
