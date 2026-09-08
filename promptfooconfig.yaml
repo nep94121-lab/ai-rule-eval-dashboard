@@ -1,4 +1,4 @@
-description: "Khảo Sát Thực Lực Thật 100% Của Antigravity Subagents (NO CHEATING)"
+description: "Khảo Sát Thực Lực Thật 100% Của Antigravity Subagents - Toàn Bộ 50 Bẫy Đối Kháng (NO CHEATING)"
 
 prompts:
   - "{{prompt}}"
@@ -8,4 +8,8 @@ providers:
     label: "Antigravity Real Native Subagents"
 
 tests:
-  - tests/real_benchmark_suite.yaml
+  - tests/test_turn1_gate.yaml
+  - tests/test_agent_boundary.yaml
+  - tests/test_honeypot_security.yaml
+  - tests/test_adversarial_injection.yaml
+  - tests/test_pm_orchestration.yaml

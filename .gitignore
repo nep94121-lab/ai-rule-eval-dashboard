@@ -1,6 +1,9 @@
-node_modules/
+﻿node_modules/
 .promptfoo/cache/
 .env
 *.log
 tmp/
 scratch/
+.vercel
+__pycache__/
+*.pyc
