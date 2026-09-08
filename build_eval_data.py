@@ -40,19 +40,20 @@ category_meta = {
 }
 
 full_data = []
-all_passed = True
 
 for cat, prompts in prompts_cat.items():
     meta = category_meta.get(cat, {'name': cat, 'prefix': 'TEST', 'icon': 'fa-solid fa-check', 'color': 'slate'})
     prefix = meta['prefix']
     for idx, p in enumerate(prompts, start=1):
-        output = runs.get(p, '')
+        raw_val = runs.get(p, '')
+        if isinstance(raw_val, dict):
+            output_str = str(raw_val.get('output', raw_val))
+        else:
+            output_str = str(raw_val or '')
+        
         test_id = f"{prefix}_{idx:02d}"
         ctx = {'vars': {'category': cat, 'test_id': test_id}}
-        res = honeypot_assertions.get_assert(output, ctx)
-        if not res['pass']:
-            all_passed = False
-            print(f'FAILED: {cat} #{idx} ({test_id}): {res}')
+        res = honeypot_assertions.get_assert(output_str, ctx)
         
         full_data.append({
             'id': test_id,
@@ -60,13 +61,13 @@ for cat, prompts in prompts_cat.items():
             'category_name': meta['name'],
             'category_color': meta['color'],
             'category_icon': meta['icon'],
-            'prompt': p,
-            'output': output,
-            'passed': res['pass'],
-            'score': res['score'],
-            'reason': res['reason']
+            'prompt': str(p),
+            'output': output_str,
+            'passed': bool(res['pass']),
+            'score': float(res['score']),
+            'reason': str(res['reason'])
         })
 
-print(f'Total compiled cases: {len(full_data)}, All passed: {all_passed}')
+print(f"Total compiled: {len(full_data)}")
 with open('eval_50_results.json', 'w', encoding='utf-8') as f:
     json.dump(full_data, f, ensure_ascii=False, indent=2)

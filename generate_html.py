@@ -206,7 +206,10 @@ html_template = f'''<!DOCTYPE html>
     }};
 
     function escapeHtml(str) {{
-      return (str || '')
+      if (typeof str === 'object' && str !== null) {{
+        str = str.output || JSON.stringify(str);
+      }}
+      return String(str || '')
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -216,18 +219,23 @@ html_template = f'''<!DOCTYPE html>
 
     function renderCases() {{
       const container = document.getElementById('casesList');
+      if (!container) return;
+      
       const filtered = testCases.filter(item => {{
         const matchCategory = currentCategory === 'all' || item.category === currentCategory;
-        const q = searchQuery.toLowerCase();
+        const q = (searchQuery || '').toLowerCase();
         const matchSearch = !q || 
-          item.id.toLowerCase().includes(q) || 
-          item.prompt.toLowerCase().includes(q) || 
-          item.output.toLowerCase().includes(q) ||
-          item.category_name.toLowerCase().includes(q);
+          (item.id || '').toLowerCase().includes(q) || 
+          (item.prompt || '').toLowerCase().includes(q) || 
+          (String(item.output || '')).toLowerCase().includes(q) ||
+          (item.category_name || '').toLowerCase().includes(q);
         return matchCategory && matchSearch;
       }});
 
-      document.getElementById('displayCount').innerText = `Đang hiển thị ${{filtered.length}} / ${{testCases.length}} test cases`;
+      const countEl = document.getElementById('displayCount');
+      if (countEl) {{
+        countEl.innerText = `Đang hiển thị ${{filtered.length}} / ${{testCases.length}} test cases`;
+      }}
 
       if (filtered.length === 0) {{
         container.innerHTML = `
@@ -241,8 +249,6 @@ html_template = f'''<!DOCTYPE html>
 
       container.innerHTML = filtered.map((item, index) => {{
         const colors = colorClasses[item.category_color] || colorClasses.slate;
-        const isPassed = item.passed;
-        const cardId = `case-${{item.id}}`;
 
         return `
           <div class="p-5 md:p-6 hover:bg-slate-800/20 transition space-y-4">
@@ -325,4 +331,4 @@ html_template = f'''<!DOCTYPE html>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_template)
 
-print("Successfully generated index.html with 50 full test cases!")
+print("Successfully re-generated index.html!")
